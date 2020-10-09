@@ -88,6 +88,8 @@ bool inserirNaFila(FILA* f,REGISTRO reg) {
 
   /* COMPLETAR - REVISAR o codigo desta funcao */
 
+  
+
   PONT novo = (PONT) malloc(sizeof(ELEMENTO));
   novo->reg = reg;
   novo->prox = NULL;
