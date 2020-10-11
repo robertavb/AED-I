@@ -86,80 +86,41 @@ PONT retornarUltimo(FILA* f, TIPOCHAVE* ch){
 /* Inserção no fim da fila */
 bool inserirNaFila(FILA* f,REGISTRO reg) {
 
-  /* COMPLETAR - REVISAR o codigo desta funcao */
-  //o predecessor de todo mundo agora é o nó cabeça, não mais o início...
-
   PONT novo = (PONT) malloc(sizeof(ELEMENTO));
   novo->reg = reg;
   novo->prox = NULL;
-
-//acho que eu estou fazendo uma lista circular sem querer
-  f->fim = novo;
-  novo->prox = f->cabeca->prox;
-  f->cabeca->prox = novo;
-  
-    /* isso deu certo mas acho que é ao contrário
+ 
+  if(f->cabeca->prox == NULL)
     f->cabeca->prox = novo;
-    novo->prox = f->fim;
-    f->fim = f->cabeca->prox;
-    */
 
-    /* isso aqui faz entrar em um laço infinito
-    novo->prox = f->cabeca->prox; */
-
+  else
+    f->fim->prox = novo;
+    f->fim = novo;
 
   return true;
 
 } /* inserir */
 
-
 /* Excluir  */
 bool excluirDaFila(FILA* f, REGISTRO* reg) {
 
-  /*PONT novo = (PONT) malloc(sizeof(ELEMENTO));
-  novo->reg = reg;
-  novo->prox = NULL;
-  
-  f->fim = novo;
-  novo->prox = f->cabeca->prox;
-  f->cabeca->prox = f->fim; */
-
-  /* COMPLETAR - REVISAR o codigo desta funcao */
-
-if(f->cabeca->prox == NULL){
-  return false;
-}
-
-  *reg = f->fim->reg;
-
-    PONT apagar = f->fim;
-
- f->cabeca->prox = f->fim;
-
-  free(apagar);
-
-/*
-  if (f->inicio==NULL){
+  if(f->cabeca->prox == NULL)
     return false;
-  }
-  *reg = f->inicio->reg;
-  PONT apagar = f->inicio;
-  f->inicio = f->inicio->prox;
-  free(apagar);
-  if (f->inicio == NULL){
-  f->fim = NULL;
-  } 
-  
-  retornarUltimo
-  if (f->cabeca->prox == NULL) return NULL;
-  *ch = f->fim->reg.chave;
-  return f->fim;
-  */
 
-  return true;
+    *reg = f->cabeca->prox->reg;
+
+      PONT apagar = f->cabeca->prox;
+
+      f->cabeca->prox = f->cabeca->prox->prox;
+
+      free(apagar);
+
+    if(f->cabeca->prox == NULL) 
+      f->fim = NULL;
+
+      return true;
+
 } /* excluirDaFila */
-
-
 
 /* Exibição da fila sequencial */
 void exibirFila(FILA* f){
