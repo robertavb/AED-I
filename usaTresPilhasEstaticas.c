@@ -57,19 +57,19 @@ void exibirPrimeiro3(PILHATRIPLA* p){
 void excluir1(PILHATRIPLA* p){
   REGISTRO reg;
   if (excluirElementoPilha(p,&reg,1)) printf("Elemento %i excluido corretamente da pilha 1.\n",reg.chave);
-  else printf("Nao foi possivel excluir elemento pilha 1 - pilha vazio.\n");
+  else printf("Nao foi possivel excluir elemento pilha 1 - pilha vazia.\n");
 }
 
 void excluir2(PILHATRIPLA* p){
   REGISTRO reg;
   if (excluirElementoPilha(p, &reg,2)) printf("Elemento %i excluido corretamente da pilha 2.\n",reg.chave);
-  else printf("Nao foi possivel excluir elemento pilha 2 - pilha vazio.\n");
+  else printf("Nao foi possivel excluir elemento pilha 2 - pilha vazia.\n");
 }
 
 void excluir3(PILHATRIPLA* p){
   REGISTRO reg;
   if (excluirElementoPilha(p, &reg,3)) printf("Elemento %i excluido corretamente da pilha 3.\n",reg.chave);
-  else printf("Nao foi possivel excluir elemento pilha 3 - pilha vazio.\n");
+  else printf("Nao foi possivel excluir elemento pilha 3 - pilha vazia.\n");
 }
 
 void exibir1(PILHATRIPLA* p){

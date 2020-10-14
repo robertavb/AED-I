@@ -138,7 +138,7 @@ bool excluirElementoPilha(PILHATRIPLA* p, REGISTRO* reg, int pilha){
    }
 
     if(pilha == 2){
-        if(p->topo2 == p->topo3-1){
+        if(p->topo2 == p->base2 - 1){
            return resposta;
        }
        *reg = p->A[p->topo2];
