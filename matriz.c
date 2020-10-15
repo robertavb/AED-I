@@ -34,47 +34,30 @@ MATRIZ* multiplicarMatrizes(MATRIZ* m1, MATRIZ* m2){
   if (m1->colunas != m2->linhas) return NULL;
   MATRIZ* res = inicializarMatriz(m1->linhas,m2->colunas);
   int i,j,k;
-  int valor;
+  int valor = 0;
 
     //a multiplicação de matrizes é, tipicamente, implementada utilizando três laços _for_ encadeado
-    // i: linha da Matriz A
-    // j: coluna da Matriz A
-    // k: linha da Matriz B
-
+    
     /* Multiplicação de matrizes:
         linha 0 de A * coluna 0 de B + linha 1 de A * coluna 0 e linha 1 de B */
 
-    if(m1->linhas == m2->colunas){
-
         for(i = 0; i < m1->linhas; i++){
-            for(j = 0; j < m1->linhas; j++){
-                for(k = 0; k < m2->colunas; k++){
-                
-                valor =(m1->M[i][0] * m2->M[0][k]) + (m1->M[i][1] * m2->M[1][k]);
-
-                /*valor = (m1->M[i][0] * m2->M[0][j]) + (m1->M[i][1] * m2->M[1][k]);*/
-
-                printf("%i ", valor);
-                    printf("\n");
-                
-                
-               
-                }
-                
-            }
+            for(j = 0; j < m2->colunas; j++)
+              for(k =0; k < m1->linhas; k++)
+                printf("%i ",  m1->M[i][j]);
+                printf("\n");
+              
             
         }
 
         /*valor = (m1->M[0][0] * m2->M[0][0]) + (m1->M[0][1] * m2->M[1][0]);*/
-
-    }
-
-    res = m1;
-
+    
+    
 
   /* COMPLETAR */
 
-  return res;
+
+  return m1;
 }
       
 
