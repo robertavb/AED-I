@@ -42,12 +42,17 @@ MATRIZ* multiplicarMatrizes(MATRIZ* m1, MATRIZ* m2){
         linha 0 de A * coluna 0 de B + linha 1 de A * coluna 0 e linha 1 de B */
 
         for(i = 0; i < m1->linhas; i++){
-            for(j = 0; j < m2->colunas; j++)
-              for(k =0; k < m1->linhas; k++)
-                printf("%i ",  m1->M[i][j]);
+          for(k =0; k < m1->linhas; k++){
+            for(j = 0; j < m2->colunas; j++){
+          
+                valor = m1->M[i][j] * m2->M[j][k];
+
+                res = m1;
+
+                printf("%i ",  valor);
                 printf("\n");
-              
-            
+              }
+            }
         }
 
         /*valor = (m1->M[0][0] * m2->M[0][0]) + (m1->M[0][1] * m2->M[1][0]);*/
@@ -57,7 +62,7 @@ MATRIZ* multiplicarMatrizes(MATRIZ* m1, MATRIZ* m2){
   /* COMPLETAR */
 
 
-  return m1;
+  return res;
 }
       
 
