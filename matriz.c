@@ -36,30 +36,18 @@ MATRIZ* multiplicarMatrizes(MATRIZ* m1, MATRIZ* m2){
   int i,j,k;
   int valor = 0;
 
-    //a multiplicação de matrizes é, tipicamente, implementada utilizando três laços _for_ encadeado
-    
-    /* Multiplicação de matrizes:
-        linha 0 de A * coluna 0 de B + linha 1 de A * coluna 0 e linha 1 de B */
-
         for(i = 0; i < m1->linhas; i++){
           for(j =0; j < m2->colunas; j++){
-            for(k = 0; k < m1->colunas; k++){
-          
-                valor += m1->M[j][k] * m2->M[k][j];
+            
+            res->M[i][j] = 0;
+            
+              for(k = 0; k < m1->colunas; k++){
+    
+                res->M[i][j] += m1->M[i][k] * m2->M[k][j];
 
-                printf("%i ",  valor);
-                printf("\n");
-                
               }
-              valor = 0;
             }
         }
-
-        /*valor = (m1->M[0][0] * m2->M[0][0]) + (m1->M[0][1] * m2->M[1][0]);*/
-    
-      res = m1;
-
-  /* COMPLETAR */
 
   return res;
 }
