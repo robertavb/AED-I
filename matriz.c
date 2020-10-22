@@ -43,23 +43,19 @@ MATRIZ* multiplicarMatrizes(MATRIZ* m1, MATRIZ* m2){
 
         for(i = 0; i < m1->linhas; i++){
           for(j =0; j < m2->colunas; j++){
-
-            m1->M[j][i] = 0;
-
             for(k = 0; k < m1->colunas; k++){
           
-                m1->M[j][i] += m1->M[j][k] * m2->M[k][j];
+                valor += m1->M[j][k] * m2->M[k][j];
 
                 printf("%i ",  valor);
                 printf("\n");
                 
               }
+              valor = 0;
             }
         }
 
         /*valor = (m1->M[0][0] * m2->M[0][0]) + (m1->M[0][1] * m2->M[1][0]);*/
-      
-      m1->m1->M[i][j];
     
       res = m1;
 
