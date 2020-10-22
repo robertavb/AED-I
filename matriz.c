@@ -52,11 +52,14 @@ MATRIZ* multiplicarMatrizes(MATRIZ* m1, MATRIZ* m2){
 
                 printf("%i ",  valor);
                 printf("\n");
+                
               }
             }
         }
 
         /*valor = (m1->M[0][0] * m2->M[0][0]) + (m1->M[0][1] * m2->M[1][0]);*/
+      
+      m1->m1->M[i][j];
     
       res = m1;
 
