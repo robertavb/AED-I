@@ -11,8 +11,9 @@
 
 #include "filapreferencial.h"
 
-PFILA criarFila(){
-  PFILA res = (PFILA) malloc(sizeof(FILAPREFERENCIAL));
+PFILA criarFila()
+{
+  PFILA res = (PFILA)malloc(sizeof(FILAPREFERENCIAL));
   res->inicioPref = NULL;
   res->fimPref = NULL;
   res->inicioGeral = NULL;
@@ -20,40 +21,49 @@ PFILA criarFila(){
   return res;
 }
 
-int tamanho(PFILA f){
+int tamanho(PFILA f)
+{
   PONT atual = f->inicioGeral;
   int tam = 0;
-  while (atual) {
+  while (atual)
+  {
     atual = atual->prox;
     tam++;
   }
   return tam;
 }
 
-int tamanhoFilaPreferencial(PFILA f){
+int tamanhoFilaPreferencial(PFILA f)
+{
   PONT atual = f->inicioPref;
   int tam = 0;
-  while (atual) {
+  while (atual)
+  {
     atual = atual->prox;
     tam++;
   }
   return tam;
 }
 
-PONT buscarID(PFILA f, int id){
+PONT buscarID(PFILA f, int id)
+{
   PONT atual = f->inicioGeral;
-   while (atual) {
-    if (atual->id == id) return atual;
+  while (atual)
+  {
+    if (atual->id == id)
+      return atual;
     atual = atual->prox;
   }
   return NULL;
 }
 
-void exibirLog(PFILA f){
+void exibirLog(PFILA f)
+{
   int numElementos = tamanho(f);
   printf("\nLog fila geral [elementos: %i] - Inicio:", numElementos);
   PONT atual = f->inicioGeral;
-  while (atual){
+  while (atual)
+  {
     printf(" [%i;%i]", atual->id, atual->ehPreferencial);
     atual = atual->prox;
   }
@@ -61,15 +71,58 @@ void exibirLog(PFILA f){
   numElementos = tamanhoFilaPreferencial(f);
   printf("\nLog fila preferencial [elementos: %i] - Inicio:", numElementos);
   atual = f->inicioPref;
-  while (atual){
+  while (atual)
+  {
     printf(" [%i;%i]", atual->id, atual->ehPreferencial);
     atual = atual->prox;
   }
   printf("\n\n");
 }
 
+bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
+{
+  bool resposta = false;
 
-bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial){
+  /* COMPLETAR */
+  if (id < 0)
+  { // ou caso já exista uma pessoa com o mesmo identificados na fila geral
+    return resposta;
+  }
+
+  PONT pessoa = (PONT)malloc(sizeof(ELEMENTO));
+
+  pessoa->id = id;
+  pessoa->ehPreferencial = ehPreferencial;
+  pessoa->prox = NULL;
+
+  if (f->inicioGeral == NULL)
+  {
+    f->fimGeral = pessoa;
+  }
+
+  else
+  {
+    f->fimGeral->prox = pessoa;
+    f->fimGeral = pessoa;
+  }
+
+  if (pessoa->ehPreferencial == true)
+  {
+  }
+
+  /*   
+    pessoa->ehPreferencial = ehPreferencial;
+    pessoa->prox = NULL;
+    if(f->inicioGeral== NULL)f->inicioGeral = pessoa;
+    else f->fimGeral->prox=pessoa;
+    f->fimGeral = pessoa;
+*/
+
+  return !resposta;
+}
+
+bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
+{
   bool resposta = false;
 
   /* COMPLETAR */
@@ -77,9 +130,8 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial){
   return resposta;
 }
 
-
-
-bool atenderPrimeiraDaFilaPreferencial(PFILA f, int* id){
+bool atenderPrimeiraDaFilaGeral(PFILA f, int *id)
+{
   bool resposta = false;
 
   /* COMPLETAR */
@@ -87,19 +139,8 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int* id){
   return resposta;
 }
 
-
-
-bool atenderPrimeiraDaFilaGeral(PFILA f, int* id){
-  bool resposta = false;
-
-  /* COMPLETAR */
-
-  return resposta;
-}
-
-
-
-bool desistirDaFila(PFILA f, int id){
+bool desistirDaFila(PFILA f, int id)
+{
   bool resposta = false;
 
   /* COMPLETAR */
