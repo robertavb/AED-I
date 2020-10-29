@@ -92,8 +92,11 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
   PONT pessoa = (PONT)malloc(sizeof(ELEMENTO));
 
   pessoa->id = id;
+  pessoa->ehPreferencial = ehPreferencial;
 
-  if (f->inicioGeral == NULL)
+  pessoa->prox = f->inicioGeral;
+
+  if (f->fimGeral == NULL || f->inicioGeral == NULL)
   {
     f->inicioGeral = pessoa;
   }
@@ -101,15 +104,19 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
   else
   {
     f->fimGeral->prox = pessoa;
+    f->fimGeral = pessoa;
   }
 
   if (pessoa->ehPreferencial == true)
   {
     PONT pessoaPreferencial = (PONT)malloc(sizeof(ELEMENTO));
 
+    pessoaPreferencial->id = id;
     pessoaPreferencial->ehPreferencial = ehPreferencial;
 
-    if (f->inicioPref == NULL)
+    pessoaPreferencial->prox = f->inicioPref;
+
+    if (f->inicioPref == NULL || f->fimPref == NULL)
     {
       f->inicioPref = pessoaPreferencial;
     }
@@ -117,6 +124,7 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
     else
     {
       f->fimPref->prox = pessoaPreferencial;
+      f->fimPref = pessoaPreferencial;
     }
   }
 
