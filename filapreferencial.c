@@ -85,7 +85,7 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
 
   /* COMPLETAR */
   if (id < 0)
-  { // ou caso já exista uma pessoa com o mesmo identificados na fila geral
+  {
     return resposta;
   }
 
@@ -126,6 +126,8 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
       f->fimPref->prox = pessoaPreferencial;
       f->fimPref = pessoaPreferencial;
     }
+
+    return !resposta;
   }
 
   return !resposta;
@@ -137,7 +139,28 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
 
   /* COMPLETAR */
 
-  return resposta;
+  PONT *pessoa;
+
+  if (f->fimGeral == NULL || f->inicioGeral == NULL)
+  {
+    return resposta;
+  }
+
+  (*pessoa)->id = *id;
+
+  *pessoa = f->inicioGeral;
+
+  PONT atender = f->inicioGeral;
+  f->inicioGeral = f->inicioGeral->prox;
+
+  free(atender);
+
+  if (f->inicioGeral == NULL)
+  {
+    f->fimGeral = NULL;
+  }
+
+  return !resposta;
 }
 
 bool atenderPrimeiraDaFilaGeral(PFILA f, int *id)
