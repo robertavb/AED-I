@@ -83,7 +83,6 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
 {
   bool resposta = false;
 
-  /* COMPLETAR */
   if (id < 0)
   {
     return resposta;
@@ -94,11 +93,10 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
   pessoa->id = id;
   pessoa->ehPreferencial = ehPreferencial;
 
-  pessoa->prox = f->inicioGeral;
-
-  if (f->fimGeral == NULL || f->inicioGeral == NULL)
+  if (f->fimGeral == NULL && f->inicioGeral == NULL)
   {
     f->inicioGeral = pessoa;
+    f->fimGeral = f->inicioGeral;
   }
 
   else
@@ -114,17 +112,16 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
     pessoaPreferencial->id = id;
     pessoaPreferencial->ehPreferencial = ehPreferencial;
 
-    pessoaPreferencial->prox = f->inicioPref;
-
-    if (f->inicioPref == NULL || f->fimPref == NULL)
+    if (f->fimPref == NULL)
     {
-      f->inicioPref = pessoaPreferencial;
+      f->fimPref = pessoaPreferencial;
+      f->inicioPref = f->fimPref;
     }
 
     else
     {
       f->fimPref->prox = pessoaPreferencial;
-      f->fimPref = pessoaPreferencial;
+      f->fimGeral = pessoaPreferencial;
     }
 
     return !resposta;
@@ -140,26 +137,6 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
   /* COMPLETAR */
 
   PONT *pessoa;
-
-  if (f->fimPref == NULL || f->inicioPref == NULL)
-  {
-    return resposta;
-  }
-
-  (*pessoa)->id = *id;
-
-  *pessoa = f->inicioPref;
-
-  PONT atender = f->inicioPref;
-  f->inicioPref = f->inicioPref->prox;
-
-  free(atender);
-
-  if (f->inicioPref == NULL)
-  {
-    f->fimPref = NULL;
-    f->fimGeral = NULL;
-  }
 
   return !resposta;
 }
