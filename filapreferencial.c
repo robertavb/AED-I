@@ -93,7 +93,7 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
   pessoa->id = id;
   pessoa->ehPreferencial = ehPreferencial;
 
-  if (f->fimGeral == NULL && f->inicioGeral == NULL)
+  if (f->fimGeral == NULL || f->inicioGeral == NULL)
   {
     f->inicioGeral = pessoa;
     f->fimGeral = f->inicioGeral;
@@ -112,19 +112,17 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
     pessoaPreferencial->id = id;
     pessoaPreferencial->ehPreferencial = ehPreferencial;
 
-    if (f->fimPref == NULL)
+    if (f->fimPref == NULL || f->inicioPref == NULL)
     {
-      f->fimPref = pessoaPreferencial;
-      f->inicioPref = f->fimPref;
+      f->inicioPref = pessoaPreferencial;
+      f->fimPref = f->inicioPref;
     }
 
     else
     {
       f->fimPref->prox = pessoaPreferencial;
-      f->fimGeral = pessoaPreferencial;
+      f->fimPref = pessoaPreferencial;
     }
-
-    return !resposta;
   }
 
   return !resposta;
@@ -136,7 +134,47 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
 
   /* COMPLETAR */
 
-  PONT *pessoa;
+  PONT pessoa;
+
+  if (f->inicioGeral == NULL && f->fimGeral == NULL)
+  {
+    return resposta;
+  }
+
+  if (f->fimPref != NULL && f->inicioPref != NULL)
+  {
+
+    *id = f->inicioPref->id;
+
+    PONT atenderPessoaPreferencial = f->inicioPref;
+
+    f->inicioPref = f->inicioPref->prox;
+
+    f->inicioGeral = f->inicioGeral->prox - f->inicioPref->id;
+
+    free(atenderPessoaPreferencial);
+
+    return !resposta;
+  }
+
+  /*if (f->fimPref == NULL && f->inicioPref == NULL && f->fimGeral != NULL && f->inicioGeral != NULL)
+  {
+
+    *id = f->inicioGeral->id;
+
+    PONT atenderPessoa = f->inicioGeral;
+
+    f->inicioGeral = f->inicioGeral->prox;
+
+    free(atenderPessoa);
+
+    if (f->inicioGeral == NULL)
+    {
+      f->fimGeral = NULL;
+    }
+
+    return !resposta;
+  }*/
 
   return !resposta;
 }
@@ -147,6 +185,49 @@ bool atenderPrimeiraDaFilaGeral(PFILA f, int *id)
 
   /* COMPLETAR */
 
+  PONT pessoa;
+
+  if (f->fimGeral == NULL || f->inicioGeral == NULL)
+  {
+    return resposta;
+  }
+
+  /*if (pessoa->ehPreferencial == true)
+  {
+
+    *id = f->inicioGeral->ehPreferencial;
+
+    PONT atenderFilaGeral = f->inicioGeral;
+
+    f->inicioGeral = f->inicioGeral->prox;
+
+    free(atenderFilaGeral);
+
+    if (f->inicioGeral == NULL)
+    {
+      f->fimGeral = NULL;
+    }
+
+    return !resposta;
+  }*/
+
+  /*if (f->fimGeral != NULL && f->inicioGeral != NULL)
+  {
+
+    *id = f->inicioGeral->id;
+
+    PONT atenderPessoa = f->inicioGeral;
+
+    f->inicioGeral = f->inicioGeral->prox;
+
+    free(atenderPessoa);
+
+    if (f->inicioGeral == NULL)
+    {
+      f->fimGeral = NULL;
+    }
+  }*/
+
   return resposta;
 }
 
@@ -155,6 +236,17 @@ bool desistirDaFila(PFILA f, int id)
   bool resposta = false;
 
   /* COMPLETAR */
+
+  PONT pessoa;
+
+  if (id != f->fimGeral->id && id != f->inicioGeral->id)
+  {
+    return resposta;
+  }
+
+  /*if(pessoa->ehPreferencial == true){
+
+  }*/
 
   return resposta;
 }
