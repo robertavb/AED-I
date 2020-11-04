@@ -5,7 +5,7 @@
 /**                                                                 **/
 /**   EP2 - Fila Preferencial                                       **/
 /**                                                                 **/
-/**   <nome do(a) aluno(a)>                   <numero USP>          **/
+/**   <Roberta Vitoria Borges>                   <11344811>         **/
 /**                                                                 **/
 /*********************************************************************/
 
@@ -135,6 +135,8 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
   /* COMPLETAR */
 
   PONT pessoa;
+  int ehPreferencial;
+  int i;
 
   if (f->inicioGeral == NULL && f->fimGeral == NULL)
   {
@@ -145,13 +147,20 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
   {
 
     *id = f->inicioPref->id;
+    ehPreferencial = f->inicioGeral->ehPreferencial;
 
     PONT atenderPessoaPreferencial = f->inicioPref;
 
     f->inicioPref = f->inicioPref->prox;
 
-    f->inicioGeral = f->inicioGeral->prox - f->inicioPref->id;
+    do
+    {
+      f->fimGeral = f->fimGeral->prox;
+    } while (f->inicioGeral->ehPreferencial == true);
 
+    /*f->fimGeral->prox = pessoa;
+    f->fimGeral = pessoa;*/
+   
     free(atenderPessoaPreferencial);
 
     return !resposta;
@@ -192,7 +201,7 @@ bool atenderPrimeiraDaFilaGeral(PFILA f, int *id)
     return resposta;
   }
 
-  /*if (pessoa->ehPreferencial == true)
+  /*if (f->inicioGeral->ehPreferencial == true)
   {
 
     *id = f->inicioGeral->ehPreferencial;
