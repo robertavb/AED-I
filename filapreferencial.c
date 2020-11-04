@@ -137,6 +137,7 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
   PONT pessoa;
   int ehPreferencial;
   int i;
+  PONT prox;
 
   if (f->inicioGeral == NULL && f->fimGeral == NULL)
   {
@@ -147,21 +148,26 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
   {
 
     *id = f->inicioPref->id;
-    ehPreferencial = f->inicioGeral->ehPreferencial;
 
     PONT atenderPessoaPreferencial = f->inicioPref;
 
     f->inicioPref = f->inicioPref->prox;
 
-    do
+    if (f->inicioGeral->ehPreferencial == true)
     {
-      f->fimGeral = f->fimGeral->prox;
-    } while (f->inicioGeral->ehPreferencial == true);
+      f->inicioGeral = f->inicioGeral->prox;
+    } // mantem isso aqui heim
+
+    else
+    {
+
+      f->inicioGeral->prox = f->inicioGeral->prox->prox;
+    }
+
+    free(atenderPessoaPreferencial);
 
     /*f->fimGeral->prox = pessoa;
     f->fimGeral = pessoa;*/
-   
-    free(atenderPessoaPreferencial);
 
     return !resposta;
   }
