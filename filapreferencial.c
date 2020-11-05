@@ -92,12 +92,15 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
   while (verificaId)
   {
     if (verificaId->id == id)
+    {
       return resposta;
+    }
     verificaId = verificaId->prox;
   }
 
   PONT pessoa = (PONT)malloc(sizeof(ELEMENTO));
 
+  pessoa->prox = NULL;
   pessoa->id = id;
   pessoa->ehPreferencial = ehPreferencial;
 
@@ -119,6 +122,7 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
 
     pessoaPreferencial->id = id;
     pessoaPreferencial->ehPreferencial = ehPreferencial;
+    pessoaPreferencial->prox = NULL;
 
     if (f->fimPref == NULL || f->inicioPref == NULL)
     {
@@ -136,23 +140,30 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
   return !resposta;
 }
 
-bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
+bool atenderPrimeiraDaFilaGeral(PFILA f, int *id)
 {
   bool resposta = false;
 
-  /* COMPLETAR */
-
-  int ehPreferencial;
-  int i = 0;
-  PONT percorre = f->inicioGeral->prox;
-  PONT segundaPosicao = f->inicioGeral;
-
-  if (f->inicioGeral == NULL && f->fimGeral == NULL)
+  if (f->fimGeral == NULL || f->inicioGeral == NULL)
   {
     return resposta;
   }
 
-  if (f->fimPref != NULL && f->inicioPref != NULL)
+  return resposta;
+}
+
+bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
+{
+  bool resposta = false;
+
+  PONT aux = f->inicioGeral;
+
+  if (f->inicioGeral == NULL)
+  {
+    return resposta;
+  }
+
+  if (f->inicioPref != NULL)
   {
 
     *id = f->inicioPref->id;
@@ -161,133 +172,39 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
 
     f->inicioPref = f->inicioPref->prox;
 
-    if (f->inicioGeral->ehPreferencial == true) // verifica a primeira posição
+    PONT apagar;
+
+    if (f->inicioGeral->ehPreferencial) /* verifica a primeira posição */
     {
+      apagar = f->inicioGeral;
       f->inicioGeral = f->inicioGeral->prox;
-    } // mantem isso aqui heim
+      free(apagar);
+    }
 
     else
     {
-      /*while (atual->ehPreferencial)
+      PONT ant = NULL;
+      while (aux->id != atenderPessoaPreferencial->id)
       {
-        if (atual->ehPreferencial == true)
-        {
-          atual = atual->prox;
-          i++;
-          printf("O tamanho do i: %i.\n", i);
-          printf("\n");
-        }
-        atual->prox;
-      }*/
-
-      while (percorre->prox)
-      {
-        if (percorre->ehPreferencial == true)
-        {
-          percorre = percorre->prox;
-        }
-        if (percorre->prox->ehPreferencial == true)
-        {
-          percorre->prox = percorre->prox->prox;
-        }
-        break;
+        ant = aux;
+        aux = aux->prox;
       }
-
-      while (segundaPosicao)
+      if (aux->ehPreferencial)
       {
-        if (segundaPosicao->ehPreferencial == true)
-        {
-          segundaPosicao = segundaPosicao->prox;
-        }
-        if (segundaPosicao->prox->ehPreferencial == true)
-        {
-          segundaPosicao->prox = segundaPosicao->prox->prox;
-        }
-        break;
+        ant->prox = aux->prox;
       }
+      free(aux);
     }
-
-    printf("O tamanho do i: %i.\n", i);
-    printf("\n");
 
     free(atenderPessoaPreferencial);
 
     return !resposta;
   }
 
-  /*if (f->fimPref == NULL && f->inicioPref == NULL && f->fimGeral != NULL && f->inicioGeral != NULL)
-  {
-
-    *id = f->inicioGeral->id;
-
-    PONT atenderPessoa = f->inicioGeral;
-
-    f->inicioGeral = f->inicioGeral->prox;
-
-    free(atenderPessoa);
-
-    if (f->inicioGeral == NULL)
-    {
-      f->fimGeral = NULL;
-    }
-
-    return !resposta;
-  }*/
-
-  return !resposta;
+  return atenderPrimeiraDaFilaGeral(f,id);
 }
 
-bool atenderPrimeiraDaFilaGeral(PFILA f, int *id)
-{
-  bool resposta = false;
 
-  /* COMPLETAR */
-
-  PONT pessoa;
-
-  if (f->fimGeral == NULL || f->inicioGeral == NULL)
-  {
-    return resposta;
-  }
-
-  /*if (f->inicioGeral->ehPreferencial == true)
-  {
-
-    *id = f->inicioGeral->ehPreferencial;
-
-    PONT atenderFilaGeral = f->inicioGeral;
-
-    f->inicioGeral = f->inicioGeral->prox;
-
-    free(atenderFilaGeral);
-
-    if (f->inicioGeral == NULL)
-    {
-      f->fimGeral = NULL;
-    }
-
-    return !resposta;
-  }*/
-
-  /*if (f->fimGeral != NULL && f->inicioGeral != NULL)
-  {
-
-    *id = f->inicioGeral->id;
-
-    PONT atenderPessoa = f->inicioGeral;
-
-    f->inicioGeral = f->inicioGeral->prox;
-
-    free(atenderPessoa);
-
-    if (f->inicioGeral == NULL)
-    {
-      f->fimGeral = NULL;
-    }
-  }*/
-
-  return resposta;
-}
 
 bool desistirDaFila(PFILA f, int id)
 {
@@ -302,16 +219,5 @@ bool desistirDaFila(PFILA f, int id)
     return resposta;
   }
 
-  /*if(pessoa->ehPreferencial == true){
-
-  }*/
-
   return resposta;
 }
-
-/* while (f->inicioGeral->prox)
-    {
-      //if (f->inicioGeral->prox->ehPreferencial == true)
-      f->inicioGeral->prox = f->inicioGeral->prox->prox;
-      i++;
-    } */
