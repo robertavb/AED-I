@@ -33,7 +33,7 @@ int main()
 	else
 		printf("Insercao retornou false (3).\n");
 	exibirLog(f);
-	res = inserirPessoaNaFila(f, 4, true);
+	res = inserirPessoaNaFila(f, 4, false);
 	if (res)
 		printf("Insercao retornou true (4). [OK]\n");
 	else

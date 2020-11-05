@@ -88,6 +88,14 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
     return resposta;
   }
 
+  PONT verificaId = f->inicioGeral;
+  while (verificaId)
+  {
+    if (verificaId->id == id)
+      return resposta;
+    verificaId = verificaId->prox;
+  }
+
   PONT pessoa = (PONT)malloc(sizeof(ELEMENTO));
 
   pessoa->id = id;
@@ -134,10 +142,10 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
 
   /* COMPLETAR */
 
-  PONT pessoa;
   int ehPreferencial;
-  int i;
-  PONT prox;
+  int i = 0;
+  PONT percorre = f->inicioGeral->prox;
+  PONT segundaPosicao = f->inicioGeral;
 
   if (f->inicioGeral == NULL && f->fimGeral == NULL)
   {
@@ -153,21 +161,56 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
 
     f->inicioPref = f->inicioPref->prox;
 
-    if (f->inicioGeral->ehPreferencial == true)
+    if (f->inicioGeral->ehPreferencial == true) // verifica a primeira posição
     {
       f->inicioGeral = f->inicioGeral->prox;
     } // mantem isso aqui heim
 
     else
     {
+      /*while (atual->ehPreferencial)
+      {
+        if (atual->ehPreferencial == true)
+        {
+          atual = atual->prox;
+          i++;
+          printf("O tamanho do i: %i.\n", i);
+          printf("\n");
+        }
+        atual->prox;
+      }*/
 
-      f->inicioGeral->prox = f->inicioGeral->prox->prox;
+      while (percorre->prox)
+      {
+        if (percorre->ehPreferencial == true)
+        {
+          percorre = percorre->prox;
+        }
+        if (percorre->prox->ehPreferencial == true)
+        {
+          percorre->prox = percorre->prox->prox;
+        }
+        break;
+      }
+
+      while (segundaPosicao)
+      {
+        if (segundaPosicao->ehPreferencial == true)
+        {
+          segundaPosicao = segundaPosicao->prox;
+        }
+        if (segundaPosicao->prox->ehPreferencial == true)
+        {
+          segundaPosicao->prox = segundaPosicao->prox->prox;
+        }
+        break;
+      }
     }
 
-    free(atenderPessoaPreferencial);
+    printf("O tamanho do i: %i.\n", i);
+    printf("\n");
 
-    /*f->fimGeral->prox = pessoa;
-    f->fimGeral = pessoa;*/
+    free(atenderPessoaPreferencial);
 
     return !resposta;
   }
@@ -265,3 +308,10 @@ bool desistirDaFila(PFILA f, int id)
 
   return resposta;
 }
+
+/* while (f->inicioGeral->prox)
+    {
+      //if (f->inicioGeral->prox->ehPreferencial == true)
+      f->inicioGeral->prox = f->inicioGeral->prox->prox;
+      i++;
+    } */
