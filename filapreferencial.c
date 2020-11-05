@@ -149,6 +149,8 @@ bool atenderPrimeiraDaFilaGeral(PFILA f, int *id)
     return resposta;
   }
 
+
+
   return resposta;
 }
 
@@ -198,13 +200,16 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
 
     free(atenderPessoaPreferencial);
 
+    if (f->inicioPref == NULL)
+    {
+      f->fimPref = NULL;
+    }
+
     return !resposta;
   }
 
-  return atenderPrimeiraDaFilaGeral(f,id);
+  return atenderPrimeiraDaFilaGeral(f, id);
 }
-
-
 
 bool desistirDaFila(PFILA f, int id)
 {
