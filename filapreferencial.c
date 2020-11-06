@@ -116,7 +116,7 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
     f->fimGeral = pessoa;
   }
 
-  if (pessoa->ehPreferencial == true)
+  if (pessoa->ehPreferencial)
   {
     PONT pessoaPreferencial = (PONT)malloc(sizeof(ELEMENTO));
 
@@ -143,15 +143,49 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial)
 bool atenderPrimeiraDaFilaGeral(PFILA f, int *id)
 {
   bool resposta = false;
+  PONT aux = f->inicioGeral;
+  int ehPreferencial;
+  PONT apagar;
 
-  if (f->fimGeral == NULL || f->inicioGeral == NULL)
+  if (f->inicioGeral == NULL)
   {
     return resposta;
   }
 
+  if (f->inicioGeral->ehPreferencial)
+  {
+    *id = f->inicioGeral->id;
 
+    PONT atenderFilaGeral = f->inicioGeral;
 
-  return resposta;
+    f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
+    f->inicioPref = f->inicioPref->prox;   /*primeira pessoa*/
+
+    free(atenderFilaGeral);
+
+    if (f->inicioGeral == NULL)
+    {
+      f->fimGeral = NULL;
+    }
+  }
+
+  else
+  {
+    *id = f->inicioGeral->id;
+
+    PONT atenderFilaGeral2 = f->inicioGeral;
+
+    f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
+
+    free(atenderFilaGeral2);
+
+    if (f->inicioGeral == NULL)
+    {
+      f->fimGeral = NULL;
+    }
+  }
+
+  return !resposta;
 }
 
 bool atenderPrimeiraDaFilaPreferencial(PFILA f, int *id)
@@ -215,14 +249,33 @@ bool desistirDaFila(PFILA f, int id)
 {
   bool resposta = false;
 
-  /* COMPLETAR */
+  PONT desisteF = f->inicioPref;
 
-  PONT pessoa;
+  PONT desisteG = f->inicioPref;
 
-  if (id != f->fimGeral->id && id != f->inicioGeral->id)
+  PONT verificaId = f->inicioGeral;
+
+  while (verificaId)
   {
-    return resposta;
+    if (verificaId->id != id)
+    {
+      return resposta;
+    }
+    verificaId = verificaId->prox;
   }
 
-  return resposta;
+  PONT ant = NULL;
+  while (verificaId->ehPreferencial)
+{
+    ant = verificaId;
+    verificaId = verificaId->prox;
+  }
+  if (verificaId->ehPreferencial)
+  {
+    ant->prox = verificaId->prox;
+
+  }
+  free(verificaId);
+
+  return !resposta;
 }
