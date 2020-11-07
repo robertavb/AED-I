@@ -249,33 +249,51 @@ bool desistirDaFila(PFILA f, int id)
 {
   bool resposta = false;
 
-  PONT desisteF = f->inicioPref;
-
-  PONT desisteG = f->inicioPref;
-
   PONT verificaId = f->inicioGeral;
+  PONT atenderPessoaPreferencial = f->inicioGeral;
+  PONT aux = f->inicioGeral;
+
+  PONT ant = NULL;
+  PONT apagarPref;
+  PONT apagarGer;
 
   while (verificaId)
   {
-    if (verificaId->id != id)
+    if (verificaId->id != f->inicioGeral->id && verificaId->id != f->inicioPref->id)
     {
       return resposta;
     }
+
+    if (verificaId->ehPreferencial)
+    {
+      apagarPref = f->inicioPref;
+      f->inicioPref = f->inicioPref->prox;
+      free(apagarPref);
+    }
+
+    else
+    {
+      PONT ant = NULL;
+      while (aux->id != atenderPessoaPreferencial->id)
+      {
+        ant = aux;
+        aux = aux->prox;
+      }
+      if (aux->ehPreferencial)
+      {
+        ant->prox = aux->prox;
+      }
+      free(aux);
+    }
+
+    if (verificaId->ehPreferencial == false)
+    {
+      apagarGer = f->inicioGeral;
+      f->inicioGeral = f->inicioGeral->prox;
+      free(apagarGer);
+    }
+
     verificaId = verificaId->prox;
   }
-
-  PONT ant = NULL;
-  while (verificaId->ehPreferencial)
-{
-    ant = verificaId;
-    verificaId = verificaId->prox;
-  }
-  if (verificaId->ehPreferencial)
-  {
-    ant->prox = verificaId->prox;
-
-  }
-  free(verificaId);
-
   return !resposta;
 }

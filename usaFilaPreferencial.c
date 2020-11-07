@@ -106,7 +106,7 @@ int main()
 	printf("################# INSERINDO PARTE 2 ###############\n");
 
 	exibirLog(f);
-	res = inserirPessoaNaFila(f, 7, false);
+	res = inserirPessoaNaFila(f, 7, true);
 	if (res)
 		printf("Insercao retornou true (14). [OK]\n");
 	else
