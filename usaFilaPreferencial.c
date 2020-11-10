@@ -140,25 +140,25 @@ int main()
 	else
 		printf("Desistindo da fila retornou false (18). [OK]\n");
 	exibirLog(f);
-	res = desistirDaFila(f, 10);
+	res = desistirDaFila(f, 7);
 	if (res)
 		printf("Desistindo da fila retornou true (19). [OK]\n");
 	else
 		printf("Desistindo da fila retornou false (19).\n");
 	exibirLog(f);
-	res = desistirDaFila(f, 7);
+	res = desistirDaFila(f, 8);
 	if (res)
 		printf("Desistindo da fila retornou true (20). [OK]\n");
 	else
 		printf("Desistindo da fila retornou false (20).\n");
 	exibirLog(f);
-	res = desistirDaFila(f, 8);
+	res = desistirDaFila(f, 9);
 	if (res)
 		printf("Desistindo da fila retornou true (21). [OK]\n");
 	else
 		printf("Desistindo da fila retornou false (21).\n");
 	exibirLog(f);
-	res = desistirDaFila(f, 9);
+	res = desistirDaFila(f, 10);
 	if (res)
 		printf("Desistindo da fila retornou true (22). [OK]\n");
 	else

@@ -169,6 +169,11 @@ bool atenderPrimeiraDaFilaGeral(PFILA f, int *id)
     {
       f->fimGeral = NULL;
     }
+
+    if (f->inicioPref == NULL)
+    {
+      f->fimPref = NULL;
+    }
   }
 
   else
@@ -251,113 +256,53 @@ bool desistirDaFila(PFILA f, int id)
 {
   bool resposta = false;
 
-  PONT verificaIdI = f->inicioGeral;
-  PONT verificaIdF = f->fimGeral;
-  PONT atenderFilaG = f->inicioGeral;
-  PONT atenderFilaF = f->inicioPref;
+  PONT verificaId = f->inicioGeral;
+  PONT apagaP = f->inicioPref;
+  PONT aux = f->inicioGeral;
+
   PONT ant = NULL;
+  PONT apagarPref;
+  PONT apagarGer;
 
-  while (verificaIdF)
+  while (verificaId)
   {
-    if (verificaIdI->id != id && verificaIdF->id != id)
+    if (verificaId->id != id)
     {
       return resposta;
+    }
+    if (f->inicioGeral->ehPreferencial)
+    {
+      PONT atenderFilaGeral = f->inicioGeral;
+
+      f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
+      f->inicioPref = f->inicioPref->prox;   /*primeira pessoa*/
+
+      free(atenderFilaGeral);
+
+      if (f->inicioGeral == NULL)
+      {
+        f->fimGeral = NULL;
+      }
+
+      if (f->fimPref == NULL)
+      {
+        f->fimPref = NULL;
+      }
     }
     else
     {
 
-      if (verificaIdF->id == id)
+      PONT apagar = f->inicioGeral;
+      f->inicioGeral = f->inicioGeral->prox;
+      free(apagar);
+      if (f->inicioGeral == NULL)
       {
-        printf("AAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAA\n\n");
-
-        PONT ant = NULL;
-
-        if (verificaIdF->ehPreferencial)
-        {
-          atenderFilaG = ant;
-        
-        free(atenderFilaG);
-        }
-      }
-
-      if (verificaIdI->ehPreferencial)
-      {
-
-        f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
-        f->inicioPref = f->inicioPref->prox;   /*primeira pessoa*/
-
-        free(atenderFilaG);
-        free(atenderFilaF);
-
-        if (f->inicioGeral == NULL)
-        {
-          f->fimGeral = NULL;
-        }
-
-        return !resposta;
-      }
-
-      else /* nao e preferencial */
-      {
-        PONT atenderFilaGeral2 = f->inicioGeral;
-
-        f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
-
-        free(atenderFilaGeral2);
-
-        if (f->inicioGeral == NULL)
-        {
-          f->fimGeral = NULL;
-        }
-
-        return !resposta;
+        f->fimGeral = NULL;
       }
     }
-    verificaIdI = verificaIdI->prox;
-  }
 
-  while (verificaIdF)
-  {
-    if (verificaIdF->id != id)
-    {
-      return resposta;
-    }
-    else
-    {
-      if (verificaIdF->ehPreferencial)
-      {
 
-        f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
-        f->inicioPref = f->inicioPref->prox;   /*primeira pessoa*/
-
-        free(atenderFilaG);
-        free(atenderFilaF);
-
-        if (f->inicioGeral == NULL)
-        {
-          f->fimGeral = NULL;
-        }
-
-        return !resposta;
-      }
-
-      else /* nao e preferencial */
-      {
-        PONT atenderFilaGeral2 = f->inicioGeral;
-
-        f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
-
-        free(atenderFilaGeral2);
-
-        if (f->inicioGeral == NULL)
-        {
-          f->fimGeral = NULL;
-        }
-
-        return !resposta;
-      }
-    }
-   
+    verificaId = verificaId->prox;
   }
 
   return !resposta;
