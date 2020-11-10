@@ -157,11 +157,13 @@ bool atenderPrimeiraDaFilaGeral(PFILA f, int *id)
     *id = f->inicioGeral->id;
 
     PONT atenderFilaGeral = f->inicioGeral;
+    PONT atenderFilaP = f->inicioPref;
 
     f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
     f->inicioPref = f->inicioPref->prox;   /*primeira pessoa*/
 
     free(atenderFilaGeral);
+    free(atenderFilaP);
 
     if (f->inicioGeral == NULL)
     {
@@ -249,51 +251,114 @@ bool desistirDaFila(PFILA f, int id)
 {
   bool resposta = false;
 
-  PONT verificaId = f->inicioGeral;
-  PONT atenderPessoaPreferencial = f->inicioGeral;
-  PONT aux = f->inicioGeral;
-
+  PONT verificaIdI = f->inicioGeral;
+  PONT verificaIdF = f->fimGeral;
+  PONT atenderFilaG = f->inicioGeral;
+  PONT atenderFilaF = f->inicioPref;
   PONT ant = NULL;
-  PONT apagarPref;
-  PONT apagarGer;
 
-  while (verificaId)
+  while (verificaIdF)
   {
-    if (verificaId->id != f->inicioGeral->id && verificaId->id != f->inicioPref->id)
+    if (verificaIdI->id != id && verificaIdF->id != id)
     {
       return resposta;
     }
-
-    if (verificaId->ehPreferencial)
-    {
-      apagarPref = f->inicioPref;
-      f->inicioPref = f->inicioPref->prox;
-      free(apagarPref);
-    }
-
     else
     {
-      PONT ant = NULL;
-      while (aux->id != atenderPessoaPreferencial->id)
-      {
-        ant = aux;
-        aux = aux->prox;
-      }
-      if (aux->ehPreferencial)
-      {
-        ant->prox = aux->prox;
-      }
-      free(aux);
-    }
 
-    if (verificaId->ehPreferencial == false)
-    {
-      apagarGer = f->inicioGeral;
-      f->inicioGeral = f->inicioGeral->prox;
-      free(apagarGer);
-    }
+      if (verificaIdF->id == id)
+      {
+        printf("AAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAA\n\n");
 
-    verificaId = verificaId->prox;
+        PONT ant = NULL;
+
+        if (verificaIdF->ehPreferencial)
+        {
+          atenderFilaG = ant;
+        
+        free(atenderFilaG);
+        }
+      }
+
+      if (verificaIdI->ehPreferencial)
+      {
+
+        f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
+        f->inicioPref = f->inicioPref->prox;   /*primeira pessoa*/
+
+        free(atenderFilaG);
+        free(atenderFilaF);
+
+        if (f->inicioGeral == NULL)
+        {
+          f->fimGeral = NULL;
+        }
+
+        return !resposta;
+      }
+
+      else /* nao e preferencial */
+      {
+        PONT atenderFilaGeral2 = f->inicioGeral;
+
+        f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
+
+        free(atenderFilaGeral2);
+
+        if (f->inicioGeral == NULL)
+        {
+          f->fimGeral = NULL;
+        }
+
+        return !resposta;
+      }
+    }
+    verificaIdI = verificaIdI->prox;
   }
+
+  while (verificaIdF)
+  {
+    if (verificaIdF->id != id)
+    {
+      return resposta;
+    }
+    else
+    {
+      if (verificaIdF->ehPreferencial)
+      {
+
+        f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
+        f->inicioPref = f->inicioPref->prox;   /*primeira pessoa*/
+
+        free(atenderFilaG);
+        free(atenderFilaF);
+
+        if (f->inicioGeral == NULL)
+        {
+          f->fimGeral = NULL;
+        }
+
+        return !resposta;
+      }
+
+      else /* nao e preferencial */
+      {
+        PONT atenderFilaGeral2 = f->inicioGeral;
+
+        f->inicioGeral = f->inicioGeral->prox; /*primeira pessoa*/
+
+        free(atenderFilaGeral2);
+
+        if (f->inicioGeral == NULL)
+        {
+          f->fimGeral = NULL;
+        }
+
+        return !resposta;
+      }
+    }
+   
+  }
+
   return !resposta;
 }
