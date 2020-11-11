@@ -260,15 +260,12 @@ bool desistirDaFila(PFILA f, int id)
     PONT auxiliar = f->inicioPref;
     PONT ant = NULL;
     PONT anterior = NULL;
-    PONT atenderPessoaPreferencial = f->inicioPref;
 
-    PONT atual = f->inicioGeral;
-    while (atual)
+    PONT idAtual = buscarID(f, id);
+
+    if (idAtual == NULL)
     {
-        if (atual->id != id)
-            return resposta;
-        atual = atual->prox;
-        break;
+        return resposta;
     }
 
     while (verificaId->id)
@@ -343,6 +340,16 @@ bool desistirDaFila(PFILA f, int id)
                 {
                     ant->prox = aux->prox;
 
+                    if (aux->prox == NULL)
+                    {
+                        f->fimGeral = ant;
+                    }
+
+                    if (aux->prox == NULL)
+                    {
+                        f->fimGeral = ant;
+                    }
+
                     if (aux->ehPreferencial)
                     {
 
@@ -350,6 +357,11 @@ bool desistirDaFila(PFILA f, int id)
 
                         anterior = auxiliar;
                         auxiliar = auxiliar->prox;
+
+                        if (auxiliar->prox == NULL)
+                        {
+                            f->fimPref = ant;
+                        }
 
                         if (auxiliar->id)
                         {

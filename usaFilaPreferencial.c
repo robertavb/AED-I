@@ -112,13 +112,13 @@ int main()
 	else
 		printf("Insercao retornou false (14).\n");
 	exibirLog(f);
-	res = inserirPessoaNaFila(f, 9, true);
+	res = inserirPessoaNaFila(f, 8, true);
 	if (res)
 		printf("Insercao retornou true (15). [OK]\n");
 	else
 		printf("Insercao retornou false (15).\n");
 	exibirLog(f);
-	res = inserirPessoaNaFila(f, 8, false);
+	res = inserirPessoaNaFila(f, 9, false);
 	if (res)
 		printf("Insercao retornou true (16). [OK]\n");
 	else
