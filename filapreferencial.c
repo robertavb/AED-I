@@ -1,7 +1,7 @@
 /*********************************************************************/
 /**   ACH2023 - Algoritmos e Estruturas de Dados I                  **/
 /**   EACH-USP - Seugndo Semestre de 2020                           **/
-/**   <2020204> - Prof. Luciano Antonio Digiampietri                  **/
+/**   <2020204> - Prof. Luciano Antonio Digiampietri                **/
 /**                                                                 **/
 /**   EP2 - Fila Preferencial                                       **/
 /**                                                                 **/
@@ -265,7 +265,6 @@ bool desistirDaFila(PFILA f, int id)
     PONT atual = f->inicioGeral;
     while (atual)
     {
-        
         if (atual->id != id)
             return resposta;
         atual = atual->prox;
