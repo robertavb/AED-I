@@ -112,13 +112,13 @@ int main()
 	else
 		printf("Insercao retornou false (14).\n");
 	exibirLog(f);
-	res = inserirPessoaNaFila(f, 8, true);
+	res = inserirPessoaNaFila(f, 9, true);
 	if (res)
 		printf("Insercao retornou true (15). [OK]\n");
 	else
 		printf("Insercao retornou false (15).\n");
 	exibirLog(f);
-	res = inserirPessoaNaFila(f, 9, false);
+	res = inserirPessoaNaFila(f, 8, false);
 	if (res)
 		printf("Insercao retornou true (16). [OK]\n");
 	else
@@ -146,13 +146,13 @@ int main()
 	else
 		printf("Desistindo da fila retornou false (19).\n");
 	exibirLog(f);
-	res = desistirDaFila(f, 8);
+	res = desistirDaFila(f, 9);
 	if (res)
 		printf("Desistindo da fila retornou true (20). [OK]\n");
 	else
 		printf("Desistindo da fila retornou false (20).\n");
 	exibirLog(f);
-	res = desistirDaFila(f, 9);
+	res = desistirDaFila(f, 8);
 	if (res)
 		printf("Desistindo da fila retornou true (21). [OK]\n");
 	else
