@@ -12,29 +12,36 @@
 typedef int bool;
 typedef char TIPOCHAVE;
 
-typedef struct auxNo{
-  TIPOCHAVE chave;
-  struct auxNo * ultimoFilho; 
-  struct auxNo * proximoIrmao; 
-} NO, * PONT;
-
+typedef struct auxNo
+{
+   TIPOCHAVE chave;
+   struct auxNo *ultimoFilho;
+   struct auxNo *proximoIrmao;
+} NO, *PONT;
 
 /* retorna o endereco do NO que contem chave=ch ou NULL caso a chave nao seja
    encontrada.                                                                */
-PONT buscarChave(PONT raiz, TIPOCHAVE ch){
-  if (raiz == NULL) return NULL;
-  if (raiz->chave == ch) return raiz;
-  PONT aux = buscarChave(raiz->ultimoFilho, ch);
-  if (aux) return aux;
-  return buscarChave(raiz->proximoIrmao, ch);
-}  
+PONT buscarChave(PONT raiz, TIPOCHAVE ch)
+{
+   if (raiz == NULL)
+      return NULL;
+   if (raiz->chave == ch)
+      return raiz;
+   PONT aux = buscarChave(raiz->ultimoFilho, ch);
+   if (aux)
+      return aux;
+   return buscarChave(raiz->proximoIrmao, ch);
+}
 
 /* retorna o tamanho (numero de nos da arvore) */
-int numeroDeNos(PONT raiz){
-   if (!raiz) return 0;
+int numeroDeNos(PONT raiz)
+{
+   if (!raiz)
+      return 0;
    int res = 1;
    PONT filhos = raiz->ultimoFilho;
-   while (filhos != NULL){
+   while (filhos != NULL)
+   {
       res += numeroDeNos(filhos);
       filhos = filhos->proximoIrmao;
    }
@@ -42,25 +49,32 @@ int numeroDeNos(PONT raiz){
 }
 
 /* retorna o tamanho (numero de nos da arvore) */
-int numeroDeNos2(PONT raiz){
-   if (!raiz) return 0;
+int numeroDeNos2(PONT raiz)
+{
+   if (!raiz)
+      return 0;
    return 1 + numeroDeNos2(raiz->ultimoFilho) + numeroDeNos2(raiz->proximoIrmao);
 }
 
 /* retorna a altura da arvore */
-int altura(PONT raiz){
-   if (!raiz) return -1;
+int altura(PONT raiz)
+{
+   if (!raiz)
+      return -1;
    int max = -1;
    int temp;
    PONT filhos = raiz->ultimoFilho;
-   while (filhos != NULL){
+   while (filhos != NULL)
+   {
       temp = altura(filhos);
-      if (temp > max) max = temp;
+      if (temp > max)
+         max = temp;
       filhos = filhos->proximoIrmao;
    }
    return max + 1;
 }
-PONT criarNovoNo(TIPOCHAVE ch){
+PONT criarNovoNo(TIPOCHAVE ch)
+{
    PONT novoNo = (PONT)malloc(sizeof(NO));
    novoNo->ultimoFilho = NULL;
    novoNo->proximoIrmao = NULL;
@@ -68,117 +82,140 @@ PONT criarNovoNo(TIPOCHAVE ch){
    return novoNo;
 }
 
-bool inserirFilho(PONT raiz, TIPOCHAVE novaChave, TIPOCHAVE chavePai){
-     PONT pai = buscarChave(raiz, chavePai);
-     if (!pai) return false;
-     PONT novo = criarNovoNo(novaChave);
-     novo->ultimoFilho = NULL;
-     novo->proximoIrmao = pai->ultimoFilho;
-     pai->ultimoFilho = novo;
-     return true;
+bool inserirFilho(PONT raiz, TIPOCHAVE novaChave, TIPOCHAVE chavePai)
+{
+   PONT pai = buscarChave(raiz, chavePai);
+   if (!pai)
+      return false;
+   PONT novo = criarNovoNo(novaChave);
+   novo->ultimoFilho = NULL;
+   novo->proximoIrmao = pai->ultimoFilho;
+   pai->ultimoFilho = novo;
+   return true;
 }
 
-void exibirArvore(PONT raiz){
-  if (raiz == NULL) return;
-  printf("%c",raiz->chave);
-  PONT filhos = raiz->ultimoFilho;
-  if (filhos == NULL) return;
-  printf("(");
-  while (filhos != NULL){
-    exibirArvore(filhos);
-    filhos = filhos->proximoIrmao;
-  }
-  printf(")");     
+void exibirArvore(PONT raiz)
+{
+   if (raiz == NULL)
+      return;
+   printf("%c", raiz->chave);
+   PONT filhos = raiz->ultimoFilho;
+   if (filhos == NULL)
+      return;
+   printf("(");
+   while (filhos != NULL)
+   {
+      exibirArvore(filhos);
+      filhos = filhos->proximoIrmao;
+   }
+   printf(")");
 }
 
-PONT criarRaiz(TIPOCHAVE novaChave){
-    return criarNovoNo(novaChave);
-} 
- 
- /*função recursiva - COPIAR o valor da MENOR e da MAIOR chave da árvore */
-
-void encontrarMinMaxRec(PONT raiz, char* min, char* max){
-   if (!raiz) return;
-
-   /* COMPLETAR */
-
-  
-
-  printf("MENOR\n");
-  printf("%s\n",min);
-
-  printf("MAIOR\n");
-  printf("%s\n", max);
+PONT criarRaiz(TIPOCHAVE novaChave)
+{
+   return criarNovoNo(novaChave);
 }
 
-bool encontrarMinMax(PONT raiz, char* min, char* max){
-   if (!raiz) return false;
+/*função recursiva - COPIAR o valor da MENOR e da MAIOR chave da árvore */
+
+void encontrarMinMaxRec(PONT raiz, char *min, char *max)
+{
+   if (!raiz)
+      return;
+
+   PONT filhos = raiz->ultimoFilho;
+
+   if (filhos == NULL)
+   {
+      return;
+   }
+
+   while (filhos != NULL)
+   {
+      if (*max < filhos->chave)
+      {
+         *max = filhos->chave;
+      }
+      if (*min > filhos->chave)
+      {
+         *min = filhos->chave;
+      }
+      encontrarMinMaxRec(filhos, min, max);
+      filhos = filhos->proximoIrmao;
+   }
+}
+
+bool encontrarMinMax(PONT raiz, char *min, char *max)
+{
+   if (!raiz)
+      return false;
    *min = raiz->chave;
    *max = raiz->chave;
    encontrarMinMaxRec(raiz, min, max);
    return true;
 }
-  
-int main(){
-  PONT raiz = criarRaiz('a');
-  printf("Numero de nos: %i\n", numeroDeNos(raiz));
-  printf("Altura: %i\n", altura(raiz));    
-  exibirArvore(raiz);
-  printf("\n");
-  inserirFilho(raiz,'b','a');
-  printf("Numero de nos: %i\n", numeroDeNos(raiz));
-  printf("Altura: %i\n", altura(raiz));    
-  exibirArvore(raiz);
-  printf("\n");
-  inserirFilho(raiz,'c','a');
-  printf("Numero de nos: %i\n", numeroDeNos(raiz));
-  printf("Altura: %i\n", altura(raiz));    
-  exibirArvore(raiz);
-  printf("\n");
-  inserirFilho(raiz,'d','a');
-  printf("Numero de nos: %i\n", numeroDeNos(raiz));
-  printf("Altura: %i\n", altura(raiz));    
-  exibirArvore(raiz);
-  printf("\n");
-  inserirFilho(raiz,'e','b');
-  printf("Numero de nos: %i\n", numeroDeNos(raiz));
-  printf("Altura: %i\n", altura(raiz));    
-  exibirArvore(raiz);
-  printf("\n");
-  inserirFilho(raiz,'f','b');
-  printf("Numero de nos: %i\n", numeroDeNos(raiz));
-  printf("Altura: %i\n", altura(raiz));    
-  exibirArvore(raiz);
-  printf("\n");
-  inserirFilho(raiz,'g','b');
-  printf("Numero de nos: %i\n", numeroDeNos(raiz));
-  printf("Altura: %i\n", altura(raiz));    
-  exibirArvore(raiz);
-  printf("\n");
-  inserirFilho(raiz,'h','d');
-  printf("Numero de nos: %i\n", numeroDeNos(raiz));
-  printf("Altura: %i\n", altura(raiz));    
-  exibirArvore(raiz);
-  printf("\n");
-  inserirFilho(raiz,'i','h');
-  printf("Numero de nos: %i\n", numeroDeNos(raiz));
-  printf("Altura: %i\n", altura(raiz));    
-  exibirArvore(raiz);
-  printf("\n");
-  inserirFilho(raiz,'j','h');
-  printf("Numero de nos: %i\n", numeroDeNos(raiz));
-  printf("Altura: %i\n", altura(raiz));    
-  exibirArvore(raiz);
-  printf("\n");
-  char min1, max1;
-  if (encontrarMinMax(raiz, &min1, &max1)){
-    printf("Menor chave na arvore: %c, maior chave na arvore: %c\n", min1, max1);
-  }
 
-  char fim;
-  printf("\nPressione <ENTER> para terminar.\n");
-  scanf("%c",&fim);
+int main()
+{
+   PONT raiz = criarRaiz('k');
+   printf("Numero de nos: %i\n", numeroDeNos(raiz));
+   printf("Altura: %i\n", altura(raiz));
+   exibirArvore(raiz);
+   printf("\n");
+   inserirFilho(raiz, 'b', 'k');
+   printf("Numero de nos: %i\n", numeroDeNos(raiz));
+   printf("Altura: %i\n", altura(raiz));
+   exibirArvore(raiz);
+   printf("\n");
+   inserirFilho(raiz, 'c', 'k');
+   printf("Numero de nos: %i\n", numeroDeNos(raiz));
+   printf("Altura: %i\n", altura(raiz));
+   exibirArvore(raiz);
+   printf("\n");
+   inserirFilho(raiz, 'a', 'k');
+   printf("Numero de nos: %i\n", numeroDeNos(raiz));
+   printf("Altura: %i\n", altura(raiz));
+   exibirArvore(raiz);
+   printf("\n");
+   inserirFilho(raiz, 'e', 'b');
+   printf("Numero de nos: %i\n", numeroDeNos(raiz));
+   printf("Altura: %i\n", altura(raiz));
+   exibirArvore(raiz);
+   printf("\n");
+   inserirFilho(raiz, 'f', 'b');
+   printf("Numero de nos: %i\n", numeroDeNos(raiz));
+   printf("Altura: %i\n", altura(raiz));
+   exibirArvore(raiz);
+   printf("\n");
+   inserirFilho(raiz, 'g', 'b');
+   printf("Numero de nos: %i\n", numeroDeNos(raiz));
+   printf("Altura: %i\n", altura(raiz));
+   exibirArvore(raiz);
+   printf("\n");
+   inserirFilho(raiz, 'h', 'd');
+   printf("Numero de nos: %i\n", numeroDeNos(raiz));
+   printf("Altura: %i\n", altura(raiz));
+   exibirArvore(raiz);
+   printf("\n");
+   inserirFilho(raiz, 'i', 'h');
+   printf("Numero de nos: %i\n", numeroDeNos(raiz));
+   printf("Altura: %i\n", altura(raiz));
+   exibirArvore(raiz);
+   printf("\n");
+   inserirFilho(raiz, 'j', 'h');
+   printf("Numero de nos: %i\n", numeroDeNos(raiz));
+   printf("Altura: %i\n", altura(raiz));
+   exibirArvore(raiz);
+   printf("\n");
+   char min1, max1;
+   if (encontrarMinMax(raiz, &min1, &max1))
+   {
+      printf("Menor chave na arvore: %c, maior chave na arvore: %c\n", min1, max1);
+   }
 
-  return 0;
+   char fim;
+   printf("\nPressione <ENTER> para terminar.\n");
+   scanf("%c", &fim);
+
+   return 0;
 }
-  
