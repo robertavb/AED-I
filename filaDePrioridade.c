@@ -44,11 +44,25 @@ int tamanho(PFILA f)
 {
   int tam = 0;
 
-  
-
   /* COMPLETAR */
 
+  PONT atual;
+  int i; /*contador*/
+  for (i = 0; i < f->elementosNoHeap; i++)
+  {
+    atual = f->heap[i];
+    tam++;
+  }
+
   return tam;
+}
+
+PONT buscarChave(PONT posicao, int id)
+{
+}
+
+void refazHeapMaximo(PFILA f, PONT atual)
+{
 }
 
 bool inserirElemento(PFILA f, int id, float prioridade)
@@ -57,7 +71,29 @@ bool inserirElemento(PFILA f, int id, float prioridade)
 
   /* COMPLETAR */
 
-  return res;
+  PONT atual;
+  int i;
+  for (i = 0; i < f->elementosNoHeap; i++)
+  {
+    atual = f->arranjo[i];
+    if (id < 0 || id >= f->maxElementos)
+    {
+      return res;
+    }
+  }
+
+  ELEMENTO *insereId;
+  insereId = (PONT)malloc(sizeof(ELEMENTO));
+
+  insereId->id = id;
+  insereId->prioridade = prioridade;
+  insereId->posicao = f->elementosNoHeap;
+
+  f->arranjo[id] = insereId;
+  f->heap[f->elementosNoHeap] = insereId;
+  (f->elementosNoHeap)++;
+
+  return !res;
 }
 
 bool aumentarPrioridade(PFILA f, int id, float novaPrioridade)
@@ -82,13 +118,31 @@ PONT removerElemento(PFILA f)
 {
   PONT res = NULL;
 
+  /*ELEMENTO *insereId;
+  insereId = (PONT)malloc(sizeof(ELEMENTO));
+
+  insereId->id = id;
+  insereId->prioridade = prioridade;
+  insereId->posicao = f->elementosNoHeap;
+
+  f->arranjo[id] = insereId;
+  f->heap[f->elementosNoHeap] = insereId;
+  (f->elementosNoHeap)++;*/
+
   /* COMPLETAR */
+  int id;
+  ELEMENTO *elemento = f->arranjo[id];
+  int apagar = elemento->id;
+  f->arranjo[apagar] = res;
+  f->heap[apagar] = res;
+  (f->elementosNoHeap)++;
 
   return res;
 }
 
 bool consultarPrioridade(PFILA f, int id, float *resposta)
 {
+
   bool res = false;
 
   /* COMPLETAR */
