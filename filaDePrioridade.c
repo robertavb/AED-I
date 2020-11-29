@@ -61,8 +61,16 @@ PONT buscarChave(PONT posicao, int id)
 {
 }
 
-void refazHeapMaximo(PFILA f, PONT atual)
+void refazHeapMaximo(PFILA f, PONT atual, int id)
 {
+  int i;
+  PONT pai = i/2;
+  PONT dir = 2*i + 1;
+  PONT esq = 2*i;
+    if(f->arranjo[id] >= f->heap[f->elementosNoHeap]){
+      pai = f->heap[f->elementosNoHeap];
+    }
+
 }
 
 bool inserirElemento(PFILA f, int id, float prioridade)
@@ -135,7 +143,7 @@ PONT removerElemento(PFILA f)
   int apagar = elemento->id;
   f->arranjo[apagar] = res;
   f->heap[apagar] = res;
-  (f->elementosNoHeap)++;
+  (f->elementosNoHeap)--;
 
   return res;
 }
