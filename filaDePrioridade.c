@@ -1,11 +1,11 @@
 /*********************************************************************/
 /**   ACH2023 - Algoritmos e Estruturas de Dados I                  **/
 /**   EACH-USP - Segundo Semestre de 2020                           **/
-/**   <turma> - Prof. Luciano Antonio Digiampietri                  **/
+/**   <2020204> - Prof. Luciano Antonio Digiampietri                **/
 /**                                                                 **/
 /**   EP3 - Fila de Prioridade (utilizando heap)                    **/
 /**                                                                 **/
-/**   <nome do(a) aluno(a)>                   <numero USP>          **/
+/**   <Roberta Vitoria Borges>                   <11344811>         **/
 /**                                                                 **/
 /*********************************************************************/
 
@@ -43,65 +43,28 @@ void exibirLog(PFILA f)
 int tamanho(PFILA f)
 {
   int tam = 0;
-
-  /* COMPLETAR */
-
+  int i;
   PONT atual;
-  int i; /*contador*/
+  /* COMPLETAR */
   for (i = 0; i < f->elementosNoHeap; i++)
   {
     atual = f->heap[i];
     tam++;
   }
-
   return tam;
 }
 
-PONT buscarChave(PONT posicao, int id)
+void heapMax(PFILA f, PONT maior, int posicao, int id)
 {
-}
-
-int pai(int posicao)
-{
-  return (posicao / 2);
-}
-
-int esq(int posicao)
-{
-  return (posicao * 2);
-}
-
-int dir(int posicao)
-{
-  return (posicao * 2 + 1);
-}
-
-void refazHeapMaximo(PFILA f, PONT atual)
-{
-  if (atual->posicao == 0)
+  int pai = posicao / 2;
+  int esq = 2 * posicao + 1;
+  int dir = 2 * posicao + 2;
+  maior = f->arranjo[pai];
+  if (maior->prioridade > f->arranjo[id]->prioridade)
   {
-    return;
+    f->arranjo[id]->prioridade = f->heap[f->elementosNoHeap]->prioridade;
   }
-
-  int pai;
-  pai = (atual->posicao) / 2;
-
-  if (atual->prioridade > f->heap[pai]->prioridade)
-  {
-    PONT aux = f->heap[pai];
-
-    int aux2 = atual->posicao;
-
-    f->heap[pai] = atual;
-
-    atual->posicao = pai;
-
-    f->heap[aux2] = aux;
-
-    aux->posicao = aux2;
-
-    refazHeapMaximo(f, atual);
-  }
+  heapMax(f, maior, posicao, id);
 }
 
 bool inserirElemento(PFILA f, int id, float prioridade)
@@ -110,43 +73,30 @@ bool inserirElemento(PFILA f, int id, float prioridade)
 
   /* COMPLETAR */
 
-  if (id < 0 || id >= f->maxElementos)
+  if (id < 0 || id >= f->maxElementos - 1)
   {
     return res;
   }
 
-  ELEMENTO *insereId;
-  insereId = (PONT)malloc(sizeof(ELEMENTO));
+  ELEMENTO *insereElemento;
+  int posicao;
 
-  insereId->id = id;
-  insereId->prioridade = prioridade;
-  insereId->posicao = f->elementosNoHeap;
+  insereElemento = (PONT)malloc(sizeof(ELEMENTO));
 
-  f->arranjo[id] = insereId;
-  f->heap[f->elementosNoHeap] = insereId;
+  f->arranjo[id] = insereElemento;
+
+  insereElemento->id = id;
+  insereElemento->prioridade = prioridade;
+  insereElemento->posicao = posicao;
+
+  f->heap[f->elementosNoHeap] = insereElemento;
+
   (f->elementosNoHeap)++;
 
-  refazHeapMaximo(f, insereId);
+  
 
   return !res;
 }
-
-void aumentarPrioridadeAux(PFILA f, int posicao)
-{
-  int j = pai(posicao);
-  if (j >= 0)
-  {
-    if (f->heap[f->elementosNoHeap]->prioridade > f->arranjo[j]->prioridade)
-    {
-      int temp = f->heap[posicao];
-      f->heap[posicao] = f->arranjo[posicao];
-      f->arranjo[posicao] = temp;
-      aumentarPrioridadeAux(f, posicao);
-    }
-  }
-}
-
-void aumentarPrioridadeAux2(PFILA f, PONT atual);
 
 bool aumentarPrioridade(PFILA f, int id, float novaPrioridade)
 {
@@ -154,51 +104,22 @@ bool aumentarPrioridade(PFILA f, int id, float novaPrioridade)
 
   /* COMPLETAR */
 
+  if (id < 0 || id >= f->maxElementos - 1)
+  {
+    return res;
+  }
+
   ELEMENTO *aux;
   aux = f->arranjo[id];
 
-  if (id < 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
+  if (f->arranjo[id]->prioridade >= novaPrioridade)
   {
     return res;
   }
 
-  if (aux->prioridade >= novaPrioridade)
-  {
-    return res;
-  }
-
-  aux->id = novaPrioridade;
-
-  aumentarPrioridadeAux(f, id);
+  aux->prioridade = novaPrioridade;
 
   return !res;
-}
-
-void reduzPrioridadeAux(PFILA f, int posicao, PONT atual, int aux, int id)
-{
-  atual = f->arranjo[id];
-  int e = esq(posicao);
-  int d = dir(posicao);
-  int maior = posicao;
-  if (e <= aux && f->heap[e] > f->heap[posicao])
-  {
-    maior = e;
-  }
-  if (d <= aux && f->heap[d] > f->heap[maior])
-  {
-    maior = d;
-  }
-  if (maior != posicao)
-  {
-    int temp = f->heap[posicao];
-    f->heap[posicao] = f->heap[maior];
-    f->heap[maior] = temp;
-    reduzPrioridadeAux(f, maior, atual, aux, id);
-  }
-}
-
-void reduzirPrioridadeAux2(PFILA f, PONT atual)
-{
 }
 
 bool reduzirPrioridade(PFILA f, int id, float novaPrioridade)
@@ -207,22 +128,20 @@ bool reduzirPrioridade(PFILA f, int id, float novaPrioridade)
 
   /* COMPLETAR */
 
+  if (id < 0 || id >= f->maxElementos - 1)
+  {
+    return res;
+  }
+
   ELEMENTO *aux;
   aux = f->arranjo[id];
 
-  if (id < 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
+  if (f->arranjo[id]->prioridade <= novaPrioridade)
   {
     return res;
   }
 
-  if (aux->prioridade <= novaPrioridade)
-  {
-    return res;
-  }
-
-  aux->id = novaPrioridade;
-
-  refazHeapMaximo(f, aux);
+  aux->prioridade = novaPrioridade;
 
   return !res;
 }
@@ -231,46 +150,18 @@ PONT removerElemento(PFILA f)
 {
   PONT res = NULL;
 
-  /*ELEMENTO *insereId;
-  insereId = (PONT)malloc(sizeof(ELEMENTO));
-
-  insereId->id = id;
-  insereId->prioridade = prioridade;
-  insereId->posicao = f->elementosNoHeap;
-
-  f->arranjo[id] = insereId;
-  f->heap[f->elementosNoHeap] = insereId;
-  (f->elementosNoHeap)++;*/
-
   /* COMPLETAR */
-
-  // fila vazia
-  if (f->arranjo == NULL || f->heap[f->elementosNoHeap] == NULL)
-  {
-    return res;
-  }
-
-  /* deverá retirar o primeiro elemento do heap máximo; reorganizar o heap (acertando os elementos - isto é, o campo posicao dos respectivos elementos - e ponteiros necessários; colocar NULL na posicao correspondente desse elemento no arranjo arranjo, acertar o valor do campo elementosNoHeap e retornar o endereço do respectivo elemento.*/
-
-  int id, posicao;
-
-  ELEMENTO *atual; // primeiro elemento
-  f->heap[0] = f->heap[f->elementosNoHeap];
-  (f->elementosNoHeap)--;
-
-  f->heap = (int)realloc(f->heap, sizeof(int));
-
-  refazHeapMaximo(f, atual);
 
   return res;
 }
 
 bool consultarPrioridade(PFILA f, int id, float *resposta)
 {
-
   bool res = false;
 
-  if (id < 0 || id >= f->maxElementos)
+  /* COMPLETAR */
+
+  if (id < 0 || id >= f->maxElementos - 1)
   {
     return res;
   }
