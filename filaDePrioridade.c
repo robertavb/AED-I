@@ -86,7 +86,7 @@ void heapAumenta(PFILA f, int posicao, PONT atual)
     atual = f->heap[maior];
     f->heap[maior] = aux;*/
 
-    PONT aux = atual;
+    PONT aux = f->heap[maior];
     int auxP = atual->posicao;
 
     f->heap[maior] = atual;
