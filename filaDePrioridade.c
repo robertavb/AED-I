@@ -45,7 +45,6 @@ int tamanho(PFILA f)
   int tam = 0;
   int i;
   PONT atual;
-  /* COMPLETAR */
   for (i = 0; i < f->elementosNoHeap; i++)
   {
     atual = f->heap[i];
@@ -73,6 +72,7 @@ void heapAumenta(PFILA f, int posicao, PONT atual)
 {
   int maior = pai(posicao);
 
+  // ja eh o pai - esta na posicao 0 - eh a raiz
   if (atual->posicao == 0)
   {
     return;
@@ -86,14 +86,14 @@ void heapAumenta(PFILA f, int posicao, PONT atual)
     atual = f->heap[maior];
     f->heap[maior] = aux;*/
 
-    PONT aux = f->heap[maior];
+    PONT aux = atual;
     int auxP = atual->posicao;
 
-    f->heap[maior] = atual;
-    atual->posicao = maior;
+    atual = f->heap[maior];
 
     f->heap[auxP] = aux;
-    aux->posicao = auxP;
+
+    aux->posicao = maior;
 
     heapAumenta(f, maior, aux);
   }
@@ -102,8 +102,6 @@ void heapAumenta(PFILA f, int posicao, PONT atual)
 bool inserirElemento(PFILA f, int id, float prioridade)
 {
   bool res = false;
-
-  /* COMPLETAR */
 
   if (id < 0 || id >= f->maxElementos)
   {
@@ -133,8 +131,6 @@ bool inserirElemento(PFILA f, int id, float prioridade)
 bool aumentarPrioridade(PFILA f, int id, float novaPrioridade)
 {
   bool res = false;
-
-  /* COMPLETAR */
 
   int posicao;
 
@@ -172,17 +168,22 @@ void heapReduz(PFILA f, int posicao, PONT atual)
 
   if (filhoDir >= f->elementosNoHeap)
   {
-    filhoDir = -1;
+    return;
   }
 
   if (filhoEsq >= f->elementosNoHeap)
   {
-    filhoEsq = -1;
+    return;
   }
 
   if (filhoEsq <= f->elementosNoHeap && f->heap[filhoEsq]->prioridade > atual->prioridade)
   {
     maior = filhoEsq;
+  }
+
+  else
+  {
+    maior = filhoDir;
   }
 
   if (filhoDir <= f->elementosNoHeap && f->heap[filhoDir]->prioridade > f->heap[maior]->prioridade)
@@ -209,7 +210,6 @@ bool reduzirPrioridade(PFILA f, int id, float novaPrioridade)
 {
   bool res = false;
 
-  /* COMPLETAR */
   int posicao;
 
   if (id < 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
@@ -236,17 +236,26 @@ PONT removerElemento(PFILA f)
 {
   PONT res = NULL;
   int posicao;
+  int id;
 
-  /* COMPLETAR */
+  //verifica se a fila esta vazia
+  if (f->elementosNoHeap == 0)
+  {
+    return res;
+  }
 
-  ELEMENTO *elemento = f->heap[0];
+  ELEMENTO *elemento = f->heap[0]; // primeiro elemento
   int remove = elemento->id;
 
+  // remove o elemento
   f->arranjo[remove] = res;
   res = elemento;
+
+  // diminui a quantidade de elementos
   (f->elementosNoHeap)--;
 
-  heapReduz(f, f->elementosNoHeap, elemento);
+  // reorganiza o heap
+  heapReduz(f, posicao, elemento);
 
   return res;
 }
@@ -255,13 +264,12 @@ bool consultarPrioridade(PFILA f, int id, float *resposta)
 {
   bool res = false;
 
-  /* COMPLETAR */
-
   if (id <= 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
   {
     return res;
   }
 
+  // valor da prioridade do elemento eh colocado na memoria apontada pela variavel resposta
   *resposta = f->arranjo[id]->prioridade;
 
   return !res;
