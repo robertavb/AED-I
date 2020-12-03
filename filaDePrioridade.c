@@ -54,17 +54,49 @@ int tamanho(PFILA f)
   return tam;
 }
 
-void heapMax(PFILA f, PONT maior, int posicao, int id)
+int pai(int posicao)
 {
-  int pai = posicao / 2;
-  int esq = 2 * posicao + 1;
-  int dir = 2 * posicao + 2;
-  maior = f->arranjo[pai];
-  if (maior->prioridade > f->arranjo[id]->prioridade)
+  return (posicao - 1) / 2;
+}
+
+int esq(int posicao)
+{
+  return (2 * posicao + 1);
+}
+
+int dir(int posicao)
+{
+  return (2 * posicao + 2);
+}
+
+void heapAumenta(PFILA f, int posicao, PONT atual)
+{
+  int maior = pai(posicao);
+
+  if (atual->posicao == 0)
   {
-    f->arranjo[id]->prioridade = f->heap[f->elementosNoHeap]->prioridade;
+    return;
   }
-  heapMax(f, maior, posicao, id);
+
+  if (atual->prioridade > f->heap[maior]->prioridade)
+  {
+    /*PONT aux = atual;
+    int auxP = atual->posicao;
+
+    atual = f->heap[maior];
+    f->heap[maior] = aux;*/
+
+    PONT aux = atual;
+    int auxP = atual->posicao;
+
+    f->heap[maior] = atual;
+    atual->posicao = maior;
+
+    f->heap[auxP] = aux;
+    aux->posicao = auxP;
+
+    heapAumenta(f, maior, aux);
+  }
 }
 
 bool inserirElemento(PFILA f, int id, float prioridade)
@@ -73,7 +105,7 @@ bool inserirElemento(PFILA f, int id, float prioridade)
 
   /* COMPLETAR */
 
-  if (id < 0 || id >= f->maxElementos - 1)
+  if (id < 0 || id >= f->maxElementos)
   {
     return res;
   }
@@ -85,15 +117,15 @@ bool inserirElemento(PFILA f, int id, float prioridade)
 
   f->arranjo[id] = insereElemento;
 
+  insereElemento->posicao = posicao;
   insereElemento->id = id;
   insereElemento->prioridade = prioridade;
-  insereElemento->posicao = posicao;
 
   f->heap[f->elementosNoHeap] = insereElemento;
 
   (f->elementosNoHeap)++;
 
-  
+  heapAumenta(f, posicao, insereElemento);
 
   return !res;
 }
@@ -104,7 +136,9 @@ bool aumentarPrioridade(PFILA f, int id, float novaPrioridade)
 
   /* COMPLETAR */
 
-  if (id < 0 || id >= f->maxElementos - 1)
+  int posicao;
+
+  if (id < 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
   {
     return res;
   }
@@ -119,7 +153,56 @@ bool aumentarPrioridade(PFILA f, int id, float novaPrioridade)
 
   aux->prioridade = novaPrioridade;
 
+  heapAumenta(f, posicao, aux);
+
   return !res;
+}
+
+void heapReduz(PFILA f, int posicao, PONT atual)
+{
+  int filhoEsq = esq(posicao);
+  int filhoDir = dir(posicao);
+
+  int maior = posicao;
+
+  if (atual->posicao == -1 || atual->posicao == 0 || atual == NULL)
+  {
+    return;
+  }
+
+  if (filhoDir >= f->elementosNoHeap)
+  {
+    filhoDir = -1;
+  }
+
+  if (filhoEsq >= f->elementosNoHeap)
+  {
+    filhoEsq = -1;
+  }
+
+  if (filhoEsq <= f->elementosNoHeap && f->heap[filhoEsq]->prioridade > atual->prioridade)
+  {
+    maior = filhoEsq;
+  }
+
+  if (filhoDir <= f->elementosNoHeap && f->heap[filhoDir]->prioridade > f->heap[maior]->prioridade)
+  {
+    maior = filhoDir;
+  }
+
+  if (maior != posicao)
+  {
+    PONT aux = f->heap[maior];
+    int auxP = atual->posicao;
+
+    f->heap[maior] = atual;
+    atual->posicao = maior;
+
+    f->heap[auxP] = aux;
+    aux->posicao = auxP;
+
+    heapReduz(f, maior, aux);
+  }
 }
 
 bool reduzirPrioridade(PFILA f, int id, float novaPrioridade)
@@ -127,8 +210,9 @@ bool reduzirPrioridade(PFILA f, int id, float novaPrioridade)
   bool res = false;
 
   /* COMPLETAR */
+  int posicao;
 
-  if (id < 0 || id >= f->maxElementos - 1)
+  if (id < 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
   {
     return res;
   }
@@ -143,14 +227,26 @@ bool reduzirPrioridade(PFILA f, int id, float novaPrioridade)
 
   aux->prioridade = novaPrioridade;
 
+  heapReduz(f, posicao, aux);
+
   return !res;
 }
 
 PONT removerElemento(PFILA f)
 {
   PONT res = NULL;
+  int posicao;
 
   /* COMPLETAR */
+
+  ELEMENTO *elemento = f->heap[0];
+  int remove = elemento->id;
+
+  f->arranjo[remove] = res;
+  res = elemento;
+  (f->elementosNoHeap)--;
+
+  heapReduz(f, f->elementosNoHeap, elemento);
 
   return res;
 }
@@ -161,7 +257,7 @@ bool consultarPrioridade(PFILA f, int id, float *resposta)
 
   /* COMPLETAR */
 
-  if (id < 0 || id >= f->maxElementos - 1)
+  if (id <= 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
   {
     return res;
   }
