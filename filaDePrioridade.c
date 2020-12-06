@@ -45,6 +45,8 @@ int tamanho(PFILA f)
   int tam = 0;
   int i;
   PONT atual;
+
+  //percorre os elementos do heap
   for (i = 0; i < f->elementosNoHeap; i++)
   {
     atual = f->heap[i];
@@ -53,24 +55,29 @@ int tamanho(PFILA f)
   return tam;
 }
 
-int pai(int posicao)
+//posicao do pai no max heap - inicio no indice 0
+int pai(int posicao, PONT atual)
 {
-  return (posicao - 1) / 2;
+  return (atual->posicao - 1) / 2;
 }
 
-int esq(int posicao)
+//posicao do filho a esquerdo no max heap - inicio no indice 0
+int esq(int posicao, PONT atual)
 {
-  return (2 * posicao + 1);
+  return (2 * atual->posicao + 1);
 }
 
-int dir(int posicao)
+//posicao do filho a direita no max heap - inicio no indice 0
+int dir(int posicao, PONT atual)
 {
-  return (2 * posicao + 2);
+  return (2 * atual->posicao + 2);
 }
 
+//funcao auxiliar utilizada na insercao de um elemento e na funcao para aumentar a prioridade - realoca os elementos mantendo a propriedade do max heap
 void heapAumenta(PFILA f, int posicao, PONT atual)
 {
-  int maior = pai(posicao);
+  //a maior posicao eh definida pela funcao pai
+  int maior = pai(posicao, atual);
 
   // ja eh o pai - esta na posicao 0 - eh a raiz
   if (atual->posicao == 0)
@@ -80,30 +87,37 @@ void heapAumenta(PFILA f, int posicao, PONT atual)
 
   if (atual->prioridade > f->heap[maior]->prioridade)
   {
-    /*PONT aux = atual;
+    // variavel auxiliar para conseguir mudar a posicao de acordo com a prioridade
+    PONT aux = f->heap[maior];
+
+    // variavel auxiliar para atualizar a posicao no heap
     int auxP = atual->posicao;
 
-    atual = f->heap[maior];
-    f->heap[maior] = aux;*/
-
-    PONT aux = atual;
-    int auxP = atual->posicao;
-
-    atual = f->heap[maior];
+    f->heap[maior] = atual;
+    atual->posicao = maior;
 
     f->heap[auxP] = aux;
+    aux->posicao = auxP;
 
-    aux->posicao = maior;
-
-    heapAumenta(f, maior, aux);
+    heapAumenta(f, maior, atual);
   }
+}
+
+void refazHeapMax(PFILA f, int posicao, PONT atual)
+{
+  for (int i = f->elementosNoHeap / 2; i <= f->elementosNoHeap; i--)
+  {
+    i--;
+  }
+  heapAumenta(f, posicao, atual);
 }
 
 bool inserirElemento(PFILA f, int id, float prioridade)
 {
   bool res = false;
 
-  if (id < 0 || id >= f->maxElementos)
+  //verifica se o id eh valido ou se ja tem um elemento com esse id na fila
+  if (id < 0 || id >= f->maxElementos || f->arranjo[id] != NULL)
   {
     return res;
   }
@@ -111,18 +125,24 @@ bool inserirElemento(PFILA f, int id, float prioridade)
   ELEMENTO *insereElemento;
   int posicao;
 
+  //aloca memoria para o elemento
   insereElemento = (PONT)malloc(sizeof(ELEMENTO));
 
+  //o elemento inserido eh colocado no arranjo de elementos
   f->arranjo[id] = insereElemento;
 
+  //atualiza a posicao, o id e a prioridade do elemento
   insereElemento->posicao = posicao;
   insereElemento->id = id;
   insereElemento->prioridade = prioridade;
 
+  //o elemento eh colocado no heap
   f->heap[f->elementosNoHeap] = insereElemento;
 
+  //aumenta a quantidade de elementos no heap
   (f->elementosNoHeap)++;
 
+  //reorganiza os elementos no heap de acordo com a prioridade
   heapAumenta(f, posicao, insereElemento);
 
   return !res;
@@ -134,6 +154,7 @@ bool aumentarPrioridade(PFILA f, int id, float novaPrioridade)
 
   int posicao;
 
+  //verifica se o id eh valido e se ele esta na fila
   if (id < 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
   {
     return res;
@@ -142,58 +163,65 @@ bool aumentarPrioridade(PFILA f, int id, float novaPrioridade)
   ELEMENTO *aux;
   aux = f->arranjo[id];
 
+  //verifica se a prioridade ja existente eh maior ou igual a nova prioridade
   if (f->arranjo[id]->prioridade >= novaPrioridade)
   {
     return res;
   }
 
+  //atualiza a prioridade
   aux->prioridade = novaPrioridade;
 
+  //reorganiza o heap
   heapAumenta(f, posicao, aux);
 
   return !res;
 }
 
+//funcao auxiliar utilizada na funcao para diminuir a prioridade - realoca os elementos mantendo a propriedade do max heap
 void heapReduz(PFILA f, int posicao, PONT atual)
 {
-  int filhoEsq = esq(posicao);
-  int filhoDir = dir(posicao);
+  //posicao do pai
+  int maior = pai(posicao, atual);
+  //posicao do filho a esquerda
+  int fEsq = esq(posicao, atual);
+  //posicao do filho a direita
+  int fDir = dir(posicao, atual);
 
-  int maior = posicao;
+  //verifica se ha filhos - a esquerda ou a direita
+  if (fDir >= f->elementosNoHeap)
+  {
+    fDir = -1;
+  }
 
-  if (atual->posicao == -1 || atual->posicao == 0 || atual == NULL)
+  if (fEsq >= f->elementosNoHeap)
+  {
+    fEsq = -1;
+  }
+
+  if (fEsq == -1 || fDir == -1)
   {
     return;
   }
 
-  if (filhoDir >= f->elementosNoHeap)
+  //encontra a posicao onde esta o elemento maior entre o filho esquerdo, filho direito e a posicao atual
+  if (fEsq <= f->elementosNoHeap && f->heap[fEsq]->prioridade > atual->prioridade)
   {
-    return;
+    maior = fEsq;
   }
 
-  if (filhoEsq >= f->elementosNoHeap)
+  if (fDir <= f->elementosNoHeap && f->heap[fDir]->prioridade > f->heap[maior]->prioridade)
   {
-    return;
+    maior = fDir;
   }
 
-  if (filhoEsq <= f->elementosNoHeap && f->heap[filhoEsq]->prioridade > atual->prioridade)
-  {
-    maior = filhoEsq;
-  }
-
-  else
-  {
-    maior = filhoDir;
-  }
-
-  if (filhoDir <= f->elementosNoHeap && f->heap[filhoDir]->prioridade > f->heap[maior]->prioridade)
-  {
-    maior = filhoDir;
-  }
-
+  //faz a troca de posicao
   if (maior != posicao)
   {
+    // variavel auxiliar para conseguir mudar a posicao de acordo com a prioridade
     PONT aux = f->heap[maior];
+
+    // variavel auxiliar para atualizar a posicao no heap
     int auxP = atual->posicao;
 
     f->heap[maior] = atual;
@@ -202,7 +230,7 @@ void heapReduz(PFILA f, int posicao, PONT atual)
     f->heap[auxP] = aux;
     aux->posicao = auxP;
 
-    heapReduz(f, maior, aux);
+    heapReduz(f, maior, atual);
   }
 }
 
@@ -212,6 +240,7 @@ bool reduzirPrioridade(PFILA f, int id, float novaPrioridade)
 
   int posicao;
 
+  //verifica se o id eh valido e se ele esta na fila
   if (id < 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
   {
     return res;
@@ -220,13 +249,16 @@ bool reduzirPrioridade(PFILA f, int id, float novaPrioridade)
   ELEMENTO *aux;
   aux = f->arranjo[id];
 
+  //verifica se a prioridade ja existente eh menor ou igual a nova prioridade
   if (f->arranjo[id]->prioridade <= novaPrioridade)
   {
     return res;
   }
 
+  //atualiza a prioridade
   aux->prioridade = novaPrioridade;
 
+  //reorganiza o heap
   heapReduz(f, posicao, aux);
 
   return !res;
@@ -237,6 +269,7 @@ PONT removerElemento(PFILA f)
   PONT res = NULL;
   int posicao;
   int id;
+  int i = 0;
 
   //verifica se a fila esta vazia
   if (f->elementosNoHeap == 0)
@@ -244,18 +277,32 @@ PONT removerElemento(PFILA f)
     return res;
   }
 
-  ELEMENTO *elemento = f->heap[0]; // primeiro elemento
+  // primeiro elemento
+  ELEMENTO *elemento;
+  elemento = f->heap[0];
   int remove = elemento->id;
 
   // remove o elemento
   f->arranjo[remove] = res;
   res = elemento;
 
-  // diminui a quantidade de elementos
-  (f->elementosNoHeap)--;
-
   // reorganiza o heap
-  heapReduz(f, posicao, elemento);
+  if (f->elementosNoHeap == 1)
+  {
+    f->heap[0] = NULL;
+  }
+  else
+  {
+    for (i = 0; i < f->elementosNoHeap - 1; i++)
+    {
+      f->heap[i] = f->heap[i + 1];
+      f->heap[i]->posicao--;
+      f->heap[i + 1] = NULL;
+    }
+  }
+
+  // diminui a quantidade de elementos no heap
+  (f->elementosNoHeap)--;
 
   return res;
 }
@@ -264,7 +311,8 @@ bool consultarPrioridade(PFILA f, int id, float *resposta)
 {
   bool res = false;
 
-  if (id <= 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
+  //verifica se o id eh valido e se existe um elemento na fila com esse id
+  if (id < 0 || id >= f->maxElementos || f->arranjo[id] == NULL)
   {
     return res;
   }
