@@ -77,8 +77,12 @@ int dir(int posicao, PONT atual)
 //funcao recursiva auxiliar utilizada na funcao inserir elemento e aumentar a prioridade - realoca os elementos mantendo a propriedade do max heap
 void auxAumenta(PFILA f, int posicao, PONT atual)
 {
-  //a maior posicao eh definida pela funcao pai
+  //posicao do pai
   int maior = pai(posicao, atual);
+  //posicao do filho a esquerda
+  int fEsq = esq(posicao, atual);
+  //posicao do filho a direita
+  int fDir = dir(posicao, atual);
 
   // ja eh o pai - esta na posicao 0 - eh a raiz
   if (atual->posicao == 0)
@@ -114,29 +118,29 @@ void auxReduz(PFILA f, int posicao, PONT atual)
   //posicao do filho a direita
   int fDir = dir(posicao, atual);
 
-  //verifica se ha filhos - a esquerda ou a direita
+  //verifica se os filhos sao validos - a esquerda ou a direita
   if (fDir >= f->elementosNoHeap)
   {
-    fDir = -1;
+    return;
   }
 
   if (fEsq >= f->elementosNoHeap)
-  {
-    fEsq = -1;
-  }
-
-  if (fEsq == -1 || fDir == -1)
   {
     return;
   }
 
   //encontra a posicao onde esta o elemento maior entre o filho esquerdo, filho direito e a posicao atual
-  if (fEsq <= f->elementosNoHeap && f->heap[fEsq]->prioridade > atual->prioridade)
+  if (fEsq < f->elementosNoHeap && f->heap[fEsq]->prioridade > atual->prioridade)
   {
     maior = fEsq;
   }
 
-  if (fDir <= f->elementosNoHeap && f->heap[fDir]->prioridade > f->heap[maior]->prioridade)
+  else
+  {
+    maior = atual->posicao;
+  }
+
+  if (fDir < f->elementosNoHeap && f->heap[fDir]->prioridade > f->heap[maior]->prioridade)
   {
     maior = fDir;
   }
@@ -189,7 +193,7 @@ bool inserirElemento(PFILA f, int id, float prioridade)
   f->arranjo[id] = insereElemento;
 
   //atualiza a posicao, o id e a prioridade do elemento
-  insereElemento->posicao = posicao;
+  insereElemento->posicao = f->elementosNoHeap;
   insereElemento->id = id;
   insereElemento->prioridade = prioridade;
 
@@ -265,45 +269,84 @@ bool reduzirPrioridade(PFILA f, int id, float novaPrioridade)
   return !res;
 }
 
+//funcao auxiliar para remover um elemento mantendo a propriedade do max heap
+void auxRemove(PFILA f, int posicao, PONT atual)
+{
+  if (atual == NULL)
+  {
+    return;
+  }
+
+  //posicao do pai
+  int maior = pai(posicao, atual);
+  //posicao do filho a esquerda
+  int fEsq = esq(posicao, atual);
+  //posicao do filho a direita
+  int fDir = dir(posicao, atual);
+
+  //verifica se os filhos sao validos - a esquerda ou a direita
+  if (fDir >= f->elementosNoHeap)
+  {
+    return;
+  }
+
+  if (fEsq >= f->elementosNoHeap)
+  {
+    return;
+  }
+
+  maior = fEsq;
+
+  if (fDir >= 2)
+  {
+    if (f->heap[fEsq]->prioridade < f->heap[fDir]->prioridade)
+    {
+      maior = fDir;
+    }
+  }
+
+  if (atual->prioridade < f->heap[maior]->prioridade)
+  {
+    // variavel auxiliar para conseguir mudar a posicao de acordo com a prioridade
+    PONT aux = f->heap[maior];
+
+    // variavel auxiliar para atualizar a posicao no heap
+    int auxP = atual->posicao;
+
+    f->heap[maior] = atual;
+    atual->posicao = maior;
+
+    f->heap[auxP] = aux;
+    aux->posicao = auxP;
+
+    auxRemove(f, maior, atual);
+  }
+}
+
 PONT removerElemento(PFILA f)
 {
   PONT res = NULL;
   int posicao;
-  int id;
-  int i = 0;
 
-  //verifica se a fila esta vazia
+  //verifica se o heap esta vazio
   if (f->elementosNoHeap == 0)
   {
     return res;
   }
 
-  // primeiro elemento
+  //primeiro elemento
   ELEMENTO *elemento;
   elemento = f->heap[0];
-  int remove = elemento->id;
-
-  // remove o elemento
-  f->arranjo[remove] = res;
   res = elemento;
+  elemento = f->heap[f->elementosNoHeap - 1];
+  elemento->posicao = 0;
 
-  // reorganiza o heap de forma iterativa
-  if (f->elementosNoHeap == 1)
-  {
-    f->heap[0] = NULL;
-  }
-  else
-  {
-    for (i = 0; i < f->elementosNoHeap - 1; i++)
-    {
-      f->heap[i] = f->heap[i + 1];
-      f->heap[i]->posicao--;
-      f->heap[i + 1] = NULL;
-    }
-  }
-
-  // diminui a quantidade de elementos no heap
+  f->heap[f->elementosNoHeap - 1] = NULL;
   (f->elementosNoHeap)--;
+  f->arranjo[res->id] = NULL;
+
+  //reorganiza o heap de forma recursiva mantendo a propriedade heap
+  auxRemove(f, posicao, f->heap[0]);
 
   return res;
 }

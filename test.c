@@ -246,8 +246,8 @@ int main()
 	//
 	printf("\nTESTE 1 - REMOCAO\n\n");
 
-	int teste1[25];
-	for (int i = 0; i < 24; i++)
+	int teste1[24];
+	for (int i = 1; i <= 24; i++)
 	{
 		teste1[i] = 0;
 	}
